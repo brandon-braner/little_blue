@@ -34,4 +34,23 @@ folder_name = "My Repo"
 active = "true"
 main_branch = "master"
 develop_branch = "develop"
-scripts = [{"executable": "python", "path": "path/to/script.py arguments""}]
+
+[[repos.mono.scripts]]
+executable = "make"
+path = "fake"
+action = "setup/upgrade/all"
+
+
+## Actions
+
+There are currently 3 actions setup, upgrade and all.  
+Setup will run first, then upgrade and finally all
+
+* setup
+setup will run when you run `inv setup`
+
+* upgrade
+upgrade will run when you run `inv change`
+  
+* all
+all will run after setup and upgrade on every other action
