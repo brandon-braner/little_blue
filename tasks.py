@@ -126,6 +126,7 @@ def _run_scripts(c, scripts: List[Script], results: List):
         info_message(f"RUNNING {executable}")
         result = _run_command(c, executable)
         results.append(result)
+    return results
 
 
 def _run_command(c: InvokeContext, cmd: str) -> CommandResult:
@@ -222,13 +223,13 @@ def run_repo_scripts(c: InvokeContext, repo: Repo, action: str):
             # return results since we had an error
             return results
 
-        try:
-            results = _run_scripts(c, all_scripts, results)
-        except NonZeroExitException as e:
-            result = CommandResult(
-                exit_code=e.exit_code,
-                message=e.message
-            )
-            results.append(result)
-            # return results since we had an error
-            return results
+    try:
+        results = _run_scripts(c, all_scripts, results)
+    except NonZeroExitException as e:
+        result = CommandResult(
+            exit_code=e.exit_code,
+            message=e.message
+        )
+        results.append(result)
+        # return results since we had an error
+        return results
