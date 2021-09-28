@@ -28,6 +28,10 @@ def upgrade(c, pull_master=True, pull_develop=True, run_scripts=True):
     }
 )
 def setup(c, run_scripts=True):
+    """
+    Task to setup new repos and run the associated actions with them.
+    :argument   run_scripts: bool should we run the scripts associated with the repo
+    """
     results = setup_repos(c, run_scripts)
     _print_console_output(results)
 
@@ -35,9 +39,9 @@ def setup(c, run_scripts=True):
 def upgrade_repos(c: InvokeContext, pull_master: bool = True, pull_develop: bool = True, run_scripts: bool = False):
     """
     Update your repos.
-    pull_master: Should we pull down the latest master
-    pull_develop: Should we pull down the latest develop(will skip if not defined in config)
-    run_scripts: Should we run defined upgrade scripts.
+    :argument   pull_master - Should we pull down the latest master
+    :argument   pull_develop - Should we pull down the latest develop(will skip if not defined in config)
+    :argument   run_scripts: Should we run defined upgrade scripts.
     """
     results = []
     project = _get_project_config()
