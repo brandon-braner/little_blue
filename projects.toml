@@ -9,6 +9,13 @@ active = "true"
 main_repo = "master"
 develop_repo = "develop"
 
+# These run with every task
 [[repos.mono.scripts]]
-executable = "git"
-path = "stashhhh"
+executable = "make"
+path = "fake"
+action = "upgrade"
+
+[[repos.mono.scripts]]
+executable = "make"
+path = "fake"
+action = "all"

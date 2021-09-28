@@ -1,4 +1,5 @@
 import pathlib
+from typing import List
 
 import toml
 from invoke import task, UnexpectedExit
@@ -39,7 +40,7 @@ def upgrade_repos(c: InvokeContext, pull_master: bool = True, pull_develop: bool
                 if pull_result.exit_code > 0:
                     return results
                 if run_scripts:
-                    scripts_results = run_repo_scripts(c, repo)
+                    scripts_results = run_repo_scripts(c, repo, 'upgrade')
                     results.extend(scripts_results)
         except NonZeroExitException as e:
             result = CommandResult(
@@ -68,6 +69,13 @@ def _generate_path(directory: str, project_folder: str):
 def _generate_script(script: Script):
     executable = f"{script.executable} {script.path}"
     return executable.strip()
+
+
+def _run_scripts(c, scripts: List[Script], results: List):
+    for script in scripts:
+        executable = _generate_script(script)
+        result = _run_command(c, executable)
+        results.append(result)
 
 
 def _run_command(c: InvokeContext, cmd: str) -> CommandResult:
@@ -109,20 +117,61 @@ def pull_branch(c: InvokeContext, repo: Repo, directory: str, branch_name: str) 
     return _run_command(c, cmd)
 
 
-def run_repo_scripts(c: InvokeContext, repo: Repo):
-    """Run the scripts defined on the repo."""
+def run_repo_scripts(c: InvokeContext, repo: Repo, action: str):
+    """
+    Run the scripts defined on the repo.
+    repo: repo from the config file
+    action: action defined array (upgrade / setup)
+    """
     results = []
     scripts = repo.scripts
+
+    setup_scripts = []
+    upgrade_scripts = []
+    all_scripts = []
+
     for script in scripts:
-        executable = _generate_script(script)
+        if script.action == 'setup':
+            setup_scripts.append(script)
+        elif script.action == 'upgrade':
+            upgrade_scripts.append(script)
+        elif script.action == 'all':
+            all_scripts.append(script)
+
+    if action == 'setup':
         try:
-            result = _run_command(c, executable)
+            results = _run_scripts(c, setup_scripts, results)
+        except NonZeroExitException as e:
+            result = CommandResult(
+                exit_code=e.exit_code,
+                message=e.message
+            )
             results.append(result)
+            # return results since we had an error
+            return results
+
+    if action == 'upgrade':
+        try:
+            results = _run_scripts(c, upgrade_scripts, results)
         except NonZeroExitException as e:
             result = CommandResult(
                 exit_code=e.exit_code,
                 message=e.message,
-                command=executable
+                command=e.command
             )
             results.append(result)
+            # return results since we had an error
             return results
+
+        try:
+            results = _run_scripts(c, all_scripts, results)
+        except NonZeroExitException as e:
+            result = CommandResult(
+                exit_code=e.exit_code,
+                message=e.message
+            )
+            results.append(result)
+            # return results since we had an error
+            return results
+
+
