@@ -20,6 +20,7 @@ class Script(BaseModel):
 
 
 class Repo(BaseModel):
+    repo_url: str
     folder_name: str
     active: bool
     main_repo: str

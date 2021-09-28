@@ -21,26 +21,71 @@ def upgrade(c, pull_master=True, pull_develop=True, run_scripts=True):
     _print_console_output(results)
 
 
+@task(
+    help={
+        "run_scripts": "Run scripts associated with repo."
+    }
+)
+def setup(c, run_scripts=True):
+    results = setup_repos(c, run_scripts)
+    _print_console_output(results)
+
+
 def upgrade_repos(c: InvokeContext, pull_master: bool = True, pull_develop: bool = True, run_scripts: bool = False):
     """
     Update your repos.
     pull_master: Should we pull down the latest master
     pull_develop: Should we pull down the latest develop(will skip if not defined in config)
-    migrate: Should we run migrations(will skip if not defined in config)
+    run_scripts: Should we run defined upgrade scripts.
     """
     results = []
     project = _get_project_config()
     directory = project.directory
     repos = project.repos
     for idx, repo in repos.items():
+        if not repo.active:
+            return results
         try:
             if pull_master:
                 pull_result = pull_branch(c, repo, directory, repo.main_repo)
                 results.append(pull_result)
-                if pull_result.exit_code > 0:
-                    return results
                 if run_scripts:
                     scripts_results = run_repo_scripts(c, repo, 'upgrade')
+                    results.extend(scripts_results)
+            if pull_develop:
+                pull_result = pull_branch(c, repo, directory, repo.develop_repo)
+                results.append(pull_result)
+                if run_scripts:
+                    scripts_results = run_repo_scripts(c, repo, 'upgrade')
+                    if scripts_results:
+                        results.extend(scripts_results)
+        except NonZeroExitException as e:
+            result = CommandResult(
+                exit_code=e.exit_code,
+                message=e.message
+            )
+            results.append(result)
+    return results
+
+
+def setup_repos(c: InvokeContext, run_scripts: bool = False):
+    """
+    Setup your repos.
+    run_scripts: Should we run the defined setup scripts
+    """
+    results = []
+    project = _get_project_config()
+    directory = project.directory
+    repos = project.repos
+    for idx, repo in repos.items():
+        if not repo.active:
+            return results
+        try:
+            clone_result = clone_repo(c, repo, directory)
+            results.append(clone_result)
+            if run_scripts:
+                scripts_results = run_repo_scripts(c, repo, 'setup')
+                if scripts_results:
                     results.extend(scripts_results)
         except NonZeroExitException as e:
             result = CommandResult(
@@ -117,6 +162,12 @@ def pull_branch(c: InvokeContext, repo: Repo, directory: str, branch_name: str) 
     return _run_command(c, cmd)
 
 
+def clone_repo(c: InvokeContext, repo: Repo, directory: str) -> CommandResult:
+    """Change to the repo directory and pull master."""
+    cmd = f"cd {directory} && git clone {repo.repo_url}"
+    return _run_command(c, cmd)
+
+
 def run_repo_scripts(c: InvokeContext, repo: Repo, action: str):
     """
     Run the scripts defined on the repo.
@@ -173,5 +224,3 @@ def run_repo_scripts(c: InvokeContext, repo: Repo, action: str):
             results.append(result)
             # return results since we had an error
             return results
-
-

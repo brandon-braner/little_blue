@@ -1,10 +1,12 @@
 title = "Test Project Config"
-directory = "~/projects/"
+directory = "~/projects/littleblue_test/"
 
 [repos]
+
 [repos.mono]
+repo_url = "git@github.com:brandon-braner/gitsync.git"
 folder_name = "test"
-active = "true"
+active = true
 main_repo = "master"
 develop_repo = "develop"
 
