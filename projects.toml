@@ -3,12 +3,12 @@ directory = "~/projects/littleblue_test/"
 
 [repos]
 
-[repos.mono]
-repo_url = "git@github.com:brandon-braner/gitsync.git"
-folder_name = "test"
-active = true
-main_repo = "master"
-develop_repo = "develop"
+#[repos.mono]
+#repo_url = "git@github.com:brandon-braner/gitsync.git"
+#folder_name = "test"
+#active = true
+#main_repo = "master"
+#develop_repo = "develop"
 
 # These run with the upgrade task
 [[repos.mono.scripts]]

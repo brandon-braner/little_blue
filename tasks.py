@@ -90,7 +90,8 @@ def setup_repos(c: InvokeContext, run_scripts: bool = False):
         except NonZeroExitException as e:
             result = CommandResult(
                 exit_code=e.exit_code,
-                message=e.message
+                message=e.message,
+                command=e.command
             )
             results.append(result)
     return results
@@ -176,6 +177,9 @@ def run_repo_scripts(c: InvokeContext, repo: Repo, action: str):
     """
     results = []
     scripts = repo.scripts
+
+    if not scripts:
+        return results
 
     setup_scripts = []
     upgrade_scripts = []
