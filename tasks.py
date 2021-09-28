@@ -5,6 +5,7 @@ import toml
 from invoke import task, UnexpectedExit
 from invoke.context import Context as InvokeContext
 
+from console_messages import success_message, error_message, info_message, generic_message
 from exceptions import NonZeroExitException
 from schemas import ProjectsTomlSchema, Repo, CommandResult, Script
 
@@ -47,12 +48,14 @@ def upgrade_repos(c: InvokeContext, pull_master: bool = True, pull_develop: bool
             return results
         try:
             if pull_master:
+                info_message(f"PULLING {repo.main_repo}")
                 pull_result = pull_branch(c, repo, directory, repo.main_repo)
                 results.append(pull_result)
                 if run_scripts:
                     scripts_results = run_repo_scripts(c, repo, 'upgrade')
                     results.extend(scripts_results)
             if pull_develop:
+                info_message(f"PULLING {repo.develop_repo}")
                 pull_result = pull_branch(c, repo, directory, repo.develop_repo)
                 results.append(pull_result)
                 if run_scripts:
@@ -120,6 +123,7 @@ def _generate_script(script: Script):
 def _run_scripts(c, scripts: List[Script], results: List):
     for script in scripts:
         executable = _generate_script(script)
+        info_message(f"RUNNING {executable}")
         result = _run_command(c, executable)
         results.append(result)
 
@@ -143,17 +147,17 @@ def _run_command(c: InvokeContext, cmd: str) -> CommandResult:
 
 def _print_console_output(results):
     """Generate console output."""
-    reset_style = "\u001b[0m"
-    print("########## OUTPUT ##########")
+    info_message("########## OUTPUT ##########")
 
     for result in results:
-        style = "\u001b[32m"
+        message = f"Command ran: {result.command}"
+        if result.exit_code == 0:
+            success_message(message)
         if result.exit_code > 0:
-            style = "\u001b[31m"
+            error_message(message)
 
-        print(f"{style} Command ran: {result.command} {reset_style}")
-        print(f"  * Exit code: {result.exit_code}")
-        print(f"  * Message: {result.message}")
+        generic_message(f"  * Exit code: {result.exit_code}")
+        generic_message(f"  * Message: {result.message}")
 
 
 def pull_branch(c: InvokeContext, repo: Repo, directory: str, branch_name: str) -> CommandResult:
