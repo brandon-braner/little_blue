@@ -1,0 +1,14 @@
+title = "FieldNation Project Config"
+directory = "~/projects/"
+
+[repos]
+
+[repos.mono]
+folder_name = "fieldnation"
+active = "true"
+main_repo = "master"
+develop_repo = "develop"
+
+[[repos.mono.scripts]]
+executable = "git"
+path = "stashhhh"
