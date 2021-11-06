@@ -65,3 +65,10 @@ upgrade will run when you run `inv change`
   
 * **all**  
 all will run after setup and upgrade on every other action
+
+
+## Open Source Projects Used
+> [Invoke](https://www.pyinvoke.org/)  An awesome library to write makefile like scripts but in Python.
+
+> [Pydantic](https://pydantic-docs.helpmanual.io/)  Data validation and settings management using python type annotations.
+
