@@ -1,3 +1,4 @@
+import os
 import pathlib
 from typing import List
 
@@ -162,6 +163,7 @@ def _run_command(c: InvokeContext, cmd: str) -> CommandResult:
     :argument   cmd: str the command to run
     """
     try:
+
         result = c.run(cmd)
         return CommandResult(
             exit_code=result.exited,
@@ -218,7 +220,7 @@ def clone_repo(c: InvokeContext, repo: Repo, directory: str) -> CommandResult:
     if not repo_path.is_dir():
         print(f"Creating directory {repo_path}")
         repo_path.mkdir(parents=True, exist_ok=True)
-    cmd = f"cd {directory} && git clone {repo.repo_url}"
+    cmd = f"cd {directory} && git clone {repo.repo_url} {repo.folder_name}"
     return _run_command(c, cmd)
 
 
@@ -229,6 +231,13 @@ def run_repo_scripts(c: InvokeContext, repo: Repo, action: str) -> List[CommandR
     :argument   repo: Repo the repo to pull
     :argument   action: str the action to run
     """
+
+    # change to the repo directory to run the script
+    project = _get_project_config()
+    directory = project.directory
+    script_path = _generate_path(directory, repo.folder_name)
+    os.chdir(script_path)
+
     results = []
     scripts = repo.scripts
 

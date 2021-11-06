@@ -83,3 +83,11 @@ Scripts are run in the order they are listed in the config.
 
 > [Pydantic](https://pydantic-docs.helpmanual.io/)  Data validation and settings management using python type annotations.
 
+# Changelog
+
+[0.0.2](https://github.com/brandon-braner/little_blue/releases/tag/0.0.2) 2021-11-06
+* Fixed clone function to clone to the repo folder
+* Added a change dir command to change to the repo folder when running scripts
+
+[0.0.1](https://github.com/brandon-braner/little_blue/releases/tag/0.0.1) 2021-11-05
+* Inital Release
