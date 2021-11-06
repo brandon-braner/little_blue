@@ -1,0 +1,6 @@
+site_name: Little Blue
+repo_url: https://github.com/brandon-braner/little_blue
+site_dir: docs
+docs_dir: docs_src
+theme:
+  name: material
