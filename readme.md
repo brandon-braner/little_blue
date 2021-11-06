@@ -40,8 +40,8 @@ main_branch = "master"
 develop_branch = "develop"
 
 [[repos.mono.scripts]]
-executable = "make"
-args = "fake"
+executable = "migration executable"
+args = "migration args"
 action = "setup/upgrade/all"
 ```
 
@@ -57,15 +57,24 @@ the version number will depend on what version of Invoke you are using.
 There are currently 3 actions setup, upgrade and all.  
 Setup will run first, then upgrade and finally all
 
-* **setup**  
+**setup**  
 setup will run when you run `inv setup`
 
-* **upgrade**  
-upgrade will run when you run `inv change`
+**upgrade**  
+upgrade will run when you run `inv change`  
+
+All upgrades will checkout your develop branch -> pull the changes -> run your scripts -> re-checkout the branch you were on.  
+**Make sure you commit or stash your changes first**
   
-* **all**  
+**all**  
 all will run after setup and upgrade on every other action
 
+## Scripts
+Scripts are anything that you need to run after you either clone or pull your repo.  
+Example if you have a Django app you might want to run `python manage.py db upgrade` after you clone or pull your repo
+you would put `python manage.py` as your executable and `db upgrade` as your args.
+
+Scripts are run in the order they are listed in the config.
 
 ## Open Source Projects Used
 > [Invoke](https://www.pyinvoke.org/)  An awesome library to write makefile like scripts but in Python.
