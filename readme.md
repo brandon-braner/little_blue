@@ -1,4 +1,4 @@
-# Little Blue
+## Little Blue - Helping you get your projects up
 ![BluePill](https://github.com/brandon-braner/images/blob/master/github_images/bluepill_200x210.png?raw=true)
 
 ## Why?
@@ -31,7 +31,7 @@ The following is an example of a repo config. You will need at least one repo se
 * **main_branch** the name of the main/master branch of your repository
 * **develop_branch** the name of the develop branch of your repository
 * **scripts** the scripts that need to run for your project. 
-
+```
 [repos.my_repo]
 repo_url = "git@github.com:brandon-braner/little_blue.git"
 folder_name = "little_blue"
@@ -43,6 +43,7 @@ develop_branch = "develop"
 executable = "make"
 args = "fake"
 action = "setup/upgrade/all"
+```
 
 ## How to Run
 
