@@ -18,6 +18,12 @@ from schemas import ProjectsTomlSchema, Repo, CommandResult, Script
     }
 )
 def upgrade(c, pull_master=True, pull_develop=True, run_scripts=True):
+    """
+    Task to upgrade the main and develop branch for all your repos listed in pyproject.toml.
+    :argument   pull_master: bool should we pull the master branch
+    :argument   pull_develop: bool should we pull the develop branch
+    :argument   run_scripts: bool should we run the scripts associated with the repo
+    """
     results = upgrade_repos(c, pull_master, pull_develop, run_scripts)
     _print_console_output(results)
 
@@ -115,16 +121,32 @@ def _get_project_config():
     return project_schema
 
 
-def _generate_path(directory: str, project_folder: str):
+def _generate_path(directory: str, project_folder: str) -> str:
+    """
+    Generate the path to where we want to setup repo.
+    :argument   directory: str the directory variable from the projects.toml
+    :argument   project_folder: str the folder name for the project
+    """
     return f"{directory}{project_folder}"
 
 
-def _generate_script(script: Script):
+def _generate_script(script: Script) -> str:
+    """
+    Generate the executable / script to run.
+    :argument   script: Script the script to run
+    """
     executable = f"{script.executable} {script.args}"
     return executable.strip()
 
 
-def _run_scripts(c, scripts: List[Script], results: List):
+def _run_scripts(c, scripts: List[Script], results: List) -> List:
+    """
+    Run the scripts defined in the pyproject.toml file for this repo and action.
+    Args:
+    :argument   c: InvokeContext
+    :argument   scripts: List[Script] the scripts defined in the pyproject.toml file
+    :argument   results: List the results from the previous command
+    """
     for script in scripts:
         executable = _generate_script(script)
         info_message(f"RUNNING {executable}")
@@ -134,7 +156,11 @@ def _run_scripts(c, scripts: List[Script], results: List):
 
 
 def _run_command(c: InvokeContext, cmd: str) -> CommandResult:
-    """Command runner."""
+    """
+    Command runner.
+    :argument   c: InvokeContext
+    :argument   cmd: str the command to run
+    """
     try:
         result = c.run(cmd)
         return CommandResult(
@@ -150,8 +176,11 @@ def _run_command(c: InvokeContext, cmd: str) -> CommandResult:
         )
 
 
-def _print_console_output(results):
-    """Generate console output."""
+def _print_console_output(results: List[CommandResult]):
+    """
+    Generate console output.
+    :argument   results: List[CommandResult] the results from the previous command
+    """
     info_message("########## OUTPUT ##########")
 
     for result in results:
@@ -166,14 +195,25 @@ def _print_console_output(results):
 
 
 def pull_branch(c: InvokeContext, repo: Repo, directory: str, branch_name: str) -> CommandResult:
-    """Change to the repo directory and pull master."""
+    """
+    Change to the repo directory and pull master.
+    :argument   c: InvokeContext
+    :argument   repo: Repo the repo to pull
+    :argument   directory: str the directory to change to
+    :argument   branch_name: str the branch to pull
+    """
     project_path = _generate_path(directory, repo.folder_name)
     cmd = f"cd {project_path} && git checkout {branch_name} && git pull"
     return _run_command(c, cmd)
 
 
 def clone_repo(c: InvokeContext, repo: Repo, directory: str) -> CommandResult:
-    """Change to the repo directory and pull master."""
+    """
+    Change to the repo directory and pull master.
+    :argument   c: InvokeContext
+    :argument   repo: Repo the repo to pull
+    :argument   directory: str the directory to change to
+    """
     repo_path = pathlib.Path(directory)
     if not repo_path.is_dir():
         print(f"Creating directory {repo_path}")
@@ -182,11 +222,12 @@ def clone_repo(c: InvokeContext, repo: Repo, directory: str) -> CommandResult:
     return _run_command(c, cmd)
 
 
-def run_repo_scripts(c: InvokeContext, repo: Repo, action: str):
+def run_repo_scripts(c: InvokeContext, repo: Repo, action: str) -> List[CommandResult]:
     """
     Run the scripts defined on the repo.
-    repo: repo from the config file
-    action: action defined array (upgrade / setup)
+    :argument   c: InvokeContext
+    :argument   repo: Repo the repo to pull
+    :argument   action: str the action to run
     """
     results = []
     scripts = repo.scripts
