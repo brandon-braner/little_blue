@@ -15,7 +15,7 @@ class Script(BaseModel):
     action: task action - upgrade/setup/all
     """
     executable: str
-    path: str
+    args: str
     action: str
 
 

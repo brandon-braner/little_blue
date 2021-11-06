@@ -120,7 +120,7 @@ def _generate_path(directory: str, project_folder: str):
 
 
 def _generate_script(script: Script):
-    executable = f"{script.executable} {script.path}"
+    executable = f"{script.executable} {script.args}"
     return executable.strip()
 
 
@@ -174,6 +174,10 @@ def pull_branch(c: InvokeContext, repo: Repo, directory: str, branch_name: str) 
 
 def clone_repo(c: InvokeContext, repo: Repo, directory: str) -> CommandResult:
     """Change to the repo directory and pull master."""
+    repo_path = pathlib.Path(directory)
+    if not repo_path.is_dir():
+        print(f"Creating directory {repo_path}")
+        repo_path.mkdir(parents=True, exist_ok=True)
     cmd = f"cd {directory} && git clone {repo.repo_url}"
     return _run_command(c, cmd)
 
@@ -208,7 +212,8 @@ def run_repo_scripts(c: InvokeContext, repo: Repo, action: str):
         except NonZeroExitException as e:
             result = CommandResult(
                 exit_code=e.exit_code,
-                message=e.message
+                message=e.message,
+                command=e.command
             )
             results.append(result)
             # return results since we had an error

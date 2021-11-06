@@ -1,23 +1,29 @@
 title = "Test Project Config"
-directory = "~/projects/littleblue_test/"
+directory = "/Users/brandonbraner/projects/littleblue_test/"
 
 [repos]
 
-#[repos.mono]
-#repo_url = "git@github.com:brandon-braner/gitsync.git"
-#folder_name = "test"
-#active = true
-#main_repo = "master"
-#develop_repo = "develop"
+[repos.little_blue]
+repo_url = "git@github.com:brandon-braner/gitsync.git"
+folder_name = "test"
+active = true
+main_repo = "master"
+develop_repo = "develop"
+
+# These would be run with a setup task
+[[repos.little_blue.scripts]]
+executable = "pwd"
+args = ""
+action = "setup"
 
 # These run with the upgrade task
-[[repos.mono.scripts]]
-executable = "make"
-path = "fake"
+[[repos.little_blue.scripts]]
+executable = "pwd"
+args = ""
 action = "upgrade"
 
 # These will run with all tasks
-[[repos.mono.scripts]]
-executable = "make"
-path = "fake"
+[[repos.little_blue.scripts]]
+executable = "pwd"
+args = ""
 action = "all"

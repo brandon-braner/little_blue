@@ -37,7 +37,7 @@ develop_branch = "develop"
 
 [[repos.mono.scripts]]
 executable = "make"
-path = "fake"
+args = "fake"
 action = "setup/upgrade/all"
 
 
@@ -46,11 +46,11 @@ action = "setup/upgrade/all"
 There are currently 3 actions setup, upgrade and all.  
 Setup will run first, then upgrade and finally all
 
-* setup
+* **setup**  
 setup will run when you run `inv setup`
 
-* upgrade
+* **upgrade**  
 upgrade will run when you run `inv change`
   
-* all
+* **all**  
 all will run after setup and upgrade on every other action
