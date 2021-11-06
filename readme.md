@@ -1,4 +1,4 @@
-## Little Blue - Helping you get your projects up
+## Little Blue - Helping you get and keep your projects up
 ![BluePill](https://github.com/brandon-braner/images/blob/master/github_images/bluepill_200x210.png?raw=true)
 
 ## Why?
