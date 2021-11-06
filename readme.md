@@ -4,7 +4,9 @@
 ## Why?
 
 I often forget to update my repos. I forget to pull the latest master or develop.  
-I forget to run the migrations. This is aimed to help me automate the little things.
+I forget to run the migrations and I am sure I am not the only one.  
+
+This project is ment to help teams get new devs setup quickly and existing devs keep their projects up to date.
 
 ## Configuration
 
