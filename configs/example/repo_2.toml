@@ -1,0 +1,24 @@
+[repos.fast_api]
+repo_url = "git@github.com:tiangolo/fastapi.git"
+folder_name = "fast_api"
+active = true
+main_branch = "master"
+develop_branch = "develop"
+
+# These would be run with a setup task
+[[repos.fast_api.scripts]]
+executable = "pwd"
+args = ""
+action = "setup"
+
+# These run with the upgrade task
+[[repos.fast_api.scripts]]
+executable = "pwd"
+args = ""
+action = "upgrade"
+
+# These will run with all tasks
+[[repos.fast_api.scripts]]
+executable = "pwd"
+args = ""
+action = "all"

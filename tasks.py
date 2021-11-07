@@ -9,36 +9,47 @@ from invoke.context import Context as InvokeContext
 from console_messages import success_message, error_message, info_message, generic_message
 from exceptions import NonZeroExitException
 from schemas import ProjectsTomlSchema, Repo, CommandResult, Script
+from src.helpers import generate_project_config
+
+project_config: ProjectsTomlSchema
 
 
 @task(
     help={
+        "config": "Folder name for config to run",
         "pull_master": "Pull the master branch.",
         "pull_develop": "Pull the develop branch",
         "run_scripts": "Run scripts associated with repo."
     }
 )
-def upgrade(c, pull_master=True, pull_develop=True, run_scripts=True):
+def upgrade(c, config="", pull_master=True, pull_develop=True, run_scripts=True):
     """
     Task to upgrade the main and develop branch for all your repos listed in pyproject.toml.
+    :argument   config: Folder name for config to run
     :argument   pull_master: bool should we pull the master branch
     :argument   pull_develop: bool should we pull the develop branch
     :argument   run_scripts: bool should we run the scripts associated with the repo
     """
+    global project_config
+    project_config = generate_project_config(config)
     results = upgrade_repos(c, pull_master, pull_develop, run_scripts)
     _print_console_output(results)
 
 
 @task(
     help={
+        "config": "Folder name for config to run",
         "run_scripts": "Run scripts associated with repo."
     }
 )
-def setup(c, run_scripts=True):
+def setup(c, config='', run_scripts=True):
     """
     Task to setup new repos and run the associated actions with them.
+    :argument   config: Folder name for config to run
     :argument   run_scripts: bool should we run the scripts associated with the repo
     """
+    global project_config
+    project_config = generate_project_config(config)
     results = setup_repos(c, run_scripts)
     _print_console_output(results)
 
@@ -50,8 +61,9 @@ def upgrade_repos(c: InvokeContext, pull_master: bool = True, pull_develop: bool
     :argument   pull_develop - Should we pull down the latest develop(will skip if not defined in config)
     :argument   run_scripts: Should we run defined upgrade scripts.
     """
+    global project_config
     results = []
-    project = _get_project_config()
+    project = project_config
     directory = project.directory
     repos = project.repos
     for idx, repo in repos.items():
@@ -59,15 +71,15 @@ def upgrade_repos(c: InvokeContext, pull_master: bool = True, pull_develop: bool
             return results
         try:
             if pull_master:
-                info_message(f"PULLING {repo.main_repo}")
-                pull_result = pull_branch(c, repo, directory, repo.main_repo)
+                info_message(f"PULLING {repo.main_branch}")
+                pull_result = pull_branch(c, repo, directory, repo.main_branch)
                 results.append(pull_result)
                 if run_scripts:
                     scripts_results = run_repo_scripts(c, repo, 'upgrade')
                     results.extend(scripts_results)
             if pull_develop:
-                info_message(f"PULLING {repo.develop_repo}")
-                pull_result = pull_branch(c, repo, directory, repo.develop_repo)
+                info_message(f"PULLING {repo.develop_branch}")
+                pull_result = pull_branch(c, repo, directory, repo.develop_branch)
                 results.append(pull_result)
                 if run_scripts:
                     scripts_results = run_repo_scripts(c, repo, 'upgrade')
@@ -85,10 +97,11 @@ def upgrade_repos(c: InvokeContext, pull_master: bool = True, pull_develop: bool
 def setup_repos(c: InvokeContext, run_scripts: bool = False):
     """
     Setup your repos.
-    run_scripts: Should we run the defined setup scripts
+    :argument   run_scripts: Should we run defined upgrade scripts.
     """
+
     results = []
-    project = _get_project_config()
+    project = project_config
     directory = project.directory
     repos = project.repos
     for idx, repo in repos.items():
@@ -109,17 +122,6 @@ def setup_repos(c: InvokeContext, run_scripts: bool = False):
             )
             results.append(result)
     return results
-
-
-def _get_project_config():
-    """Import the projects toml file and return a dict."""
-    path = pathlib.Path(__file__).parent.absolute()
-    toml_file = f"{path}/projects.toml"
-    projects = toml.load(toml_file)
-
-    # validate via pydantic models
-    project_schema = ProjectsTomlSchema.parse_obj(projects)
-    return project_schema
 
 
 def _generate_path(directory: str, project_folder: str) -> str:
@@ -233,7 +235,8 @@ def run_repo_scripts(c: InvokeContext, repo: Repo, action: str) -> List[CommandR
     """
 
     # change to the repo directory to run the script
-    project = _get_project_config()
+    global project_config
+    project = project_config
     directory = project.directory
     script_path = _generate_path(directory, repo.folder_name)
     os.chdir(script_path)
