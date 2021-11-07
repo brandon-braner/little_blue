@@ -24,6 +24,9 @@ You will then create a new toml file for each repo you want to setup `repo.toml`
 `[repo.{reponame}]` in each header replace `{}` with the name of the repo. These are just here for unique identification. They can be anything
 but must be unique.
 
+Finally create a `build.toml`. This will contain the name of the main.toml file incase you decide to change it as well as an
+array of the project files. The order they appear here is the order they will be built. When listing the files you do not need to append the .toml extension.
+
 ### main.toml
 main.toml is where you setup the basic information on your project. You can copy the code block below as a template to start.  
 ```
@@ -50,6 +53,11 @@ args = ""
 action = "setup"
 ```
 
+### build.toml
+```
+main_file = "main"
+repo_build_order = ["repo_1", "repo_2"]
+```
 
 ### Setup & Add a new repo
 
