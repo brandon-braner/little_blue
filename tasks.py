@@ -71,15 +71,15 @@ def upgrade_repos(c: InvokeContext, pull_master: bool = True, pull_develop: bool
             return results
         try:
             if pull_master:
-                info_message(f"PULLING {repo.main_repo}")
-                pull_result = pull_branch(c, repo, directory, repo.main_repo)
+                info_message(f"PULLING {repo.main_branch}")
+                pull_result = pull_branch(c, repo, directory, repo.main_branch)
                 results.append(pull_result)
                 if run_scripts:
                     scripts_results = run_repo_scripts(c, repo, 'upgrade')
                     results.extend(scripts_results)
             if pull_develop:
-                info_message(f"PULLING {repo.develop_repo}")
-                pull_result = pull_branch(c, repo, directory, repo.develop_repo)
+                info_message(f"PULLING {repo.develop_branch}")
+                pull_result = pull_branch(c, repo, directory, repo.develop_branch)
                 results.append(pull_result)
                 if run_scripts:
                     scripts_results = run_repo_scripts(c, repo, 'upgrade')

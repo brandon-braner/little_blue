@@ -23,8 +23,8 @@ class Repo(BaseModel):
     repo_url: str
     folder_name: str
     active: bool
-    main_repo: str
-    develop_repo: Optional[str]
+    main_branch: str
+    develop_branch: Optional[str]
     scripts: Optional[List[Script]]
 
 

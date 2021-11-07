@@ -2,8 +2,8 @@
 repo_url = "git@github.com:brandon-braner/little_blue.git"
 folder_name = "little_blue"
 active = true
-main_repo = "master"
-develop_repo = "develop"
+main_branch = "master"
+develop_branch = "develop"
 
 # These would be run with a setup task
 [[repos.little_blue.scripts]]

@@ -1,9 +1,9 @@
 [repos.fast_api]
 repo_url = "git@github.com:tiangolo/fastapi.git"
-folder_name = "test"
+folder_name = "fast_api"
 active = true
-main_repo = "master"
-develop_repo = "develop"
+main_branch = "master"
+develop_branch = "develop"
 
 # These would be run with a setup task
 [[repos.fast_api.scripts]]
