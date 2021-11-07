@@ -1,29 +1,24 @@
-title = "Test Project Config"
-directory = "/Users/brandonbraner/projects/littleblue_test/"
-
-[repos]
-
-[repos.little_blue]
-repo_url = "git@github.com:brandon-braner/gitsync.git"
+[repos.fast_api]
+repo_url = "git@github.com:tiangolo/fastapi.git"
 folder_name = "test"
 active = true
 main_repo = "master"
 develop_repo = "develop"
 
 # These would be run with a setup task
-[[repos.little_blue.scripts]]
+[[repos.fast_api.scripts]]
 executable = "pwd"
 args = ""
 action = "setup"
 
 # These run with the upgrade task
-[[repos.little_blue.scripts]]
+[[repos.fast_api.scripts]]
 executable = "pwd"
 args = ""
 action = "upgrade"
 
 # These will run with all tasks
-[[repos.little_blue.scripts]]
+[[repos.fast_api.scripts]]
 executable = "pwd"
 args = ""
 action = "all"
