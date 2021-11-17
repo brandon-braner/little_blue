@@ -107,7 +107,7 @@ action = "setup/upgrade/all"
 * Ensure you have your virtualenv activated.
 * Test that the inv command works by running `inv --version`. You should get a response that looks like `Invoke 1.6.0`
 the version number will depend on what version of Invoke you are using.
-* Run `inv {action} {project}` where {action} is one of the actions is either `setup` or `upgrade` and `{project}` is the name 
+* Run `inv {action} -c {project}` where {action} is one of the actions is either `setup` or `upgrade` and `{project}` is the name 
 of the folder from the `configs` directory you want to run.
 
 ## Actions
