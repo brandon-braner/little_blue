@@ -66,6 +66,20 @@ Follow the following steps to setup this project.
 * Setup a virtualenv. The simplest way to do this is to change to this directory and run `python -m venv venv`.
 * Install the requirements by activating your virtualenv by running `source venv/bin/activate` and then run `pip install -r requirements.txt`.
 * Follow the steps above for creating a new project and repo.
+
+
+Python setup instructions: https://realpython.com/installing-python/
+```
+# run this to create virtual env.
+python3 -m  venv venv
+
+# activate virtual env
+source venv/bin/activate
+
+# install requirements
+pip install -r requirements.txt
+```
+
 The following is an example of a repo config. You will need at least one repo setup.
 
 * **repo_url** the ssh url we can clone the repo from. Currently, we are only supporting ssh. 
