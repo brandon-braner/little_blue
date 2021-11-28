@@ -20,9 +20,6 @@ def generate_project_config(config: str):
     with open(main_file) as fp:
         project_config += fp.read()
         project_config += '\n'
-        project_config += '[repos]'
-        project_config += '\n'
-
 
     for repo_file in project_build_config['repo_build_order']:
         with open(f"{project_config_folder}/{repo_file}.toml") as fp:
