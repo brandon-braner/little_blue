@@ -272,7 +272,7 @@ def run_repo_scripts(c: InvokeContext, repo: Repo, action: str) -> List[CommandR
             # return results since we had an error
             return results
 
-    if action == 'upgrade':
+    elif action == 'upgrade':
         try:
             results = _run_scripts(c, upgrade_scripts, results)
         except NonZeroExitException as e:
