@@ -20,7 +20,7 @@ Each project is setup in the `configs` directory. The name of the project is the
 
 To setup a project simply create a directory and inside that directory create a toml file with the name `main.toml`.  
 
-You will then create a new toml file for each repo you want to setup `repo.toml`. In the example below you wil see headers like
+You will then create a new toml file for each repo you want to setup `repo.toml`. In the example below you will see headers like
 `[repo.{reponame}]` in each header replace `{}` with the name of the repo. These are just here for unique identification. They can be anything
 but must be unique.
 
