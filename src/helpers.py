@@ -29,5 +29,4 @@ def generate_project_config(config: str):
     # validate via pydantic models
 
     project = toml.loads(project_config)
-    project_schema = ProjectsTomlSchema.parse_obj(project)
-    return project_schema
+    return ProjectsTomlSchema.parse_obj(project)
